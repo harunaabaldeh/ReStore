@@ -13,6 +13,16 @@ builder.Services.AddDbContext<StoreContext>(options => {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+// builder.Services.AddCors();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -21,9 +31,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    
 }
 
-
+app.UseCors();
+ 
 app.UseAuthorization();
 
 app.MapControllers();
