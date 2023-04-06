@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import CardHeader from "@mui/material/CardHeader";
 import { Product } from "../../app/models/product";
+import { NavLink } from "react-router-dom";
 
 interface Props {
   product: Product;
@@ -20,17 +21,21 @@ function ProductCard({ product }: Props) {
       <Card>
         <CardHeader
           avatar={
-          <Avatar sx={{ bgcolor: 'secondary.main' }}>
-            {product.name.charAt(0)}
+            <Avatar sx={{ bgcolor: "secondary.main" }}>
+              {product.name.charAt(0)}
             </Avatar>
-        }
+          }
           title={product.name}
           titleTypographyProps={{
-            sx : { fontWeight : 'bold', color : 'primary.main'}
+            sx: { fontWeight: "bold", color: "primary.main" },
           }}
         />
         <CardMedia
-          sx={{ height: 140, backgroundSize: "contain", bgcolor: 'primary.light' }}
+          sx={{
+            height: 140,
+            backgroundSize: "contain",
+            bgcolor: "primary.light",
+          }}
           image={product.pictureUrl}
           title={product.name}
         />
@@ -44,7 +49,13 @@ function ProductCard({ product }: Props) {
         </CardContent>
         <CardActions>
           <Button size="small">Add to cart</Button>
-          <Button size="small">View</Button>
+          <Button
+            component={NavLink}
+            to={`/catalog/${product.id}`}
+            size="small"
+          >
+            View
+          </Button>
         </CardActions>
       </Card>
     </>
