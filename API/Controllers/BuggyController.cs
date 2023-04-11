@@ -22,7 +22,7 @@ namespace API.Controllers
             return Unauthorized();
         }
 
-        [HttpGet("validation-problem")]
+        [HttpGet("validation-error")]
         public ActionResult GetValidationError()
         {
             ModelState.AddModelError("Problem1", "This is the first error");
