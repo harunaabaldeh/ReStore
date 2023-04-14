@@ -15,13 +15,20 @@ builder.Services.AddDbContext<StoreContext>(options => {
 });
 
 // builder.Services.AddCors();
-builder.Services.AddCors(options =>
+/*builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
     {
         builder.AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod();
+    });
+});*/
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:5173");
     });
 });
 
@@ -36,7 +43,7 @@ if (app.Environment.IsDevelopment())
     
 }
 
-app.UseCors();
+app.UseCors("CorsPolicy");
  
 app.UseAuthorization();
 
