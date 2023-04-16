@@ -5,23 +5,23 @@ import { router } from "../router/Routes";
 axios.defaults.baseURL = "http://localhost:5000/api/";
 axios.defaults.withCredentials = true;
 
-const sleep = () => new Promise(resolve => setTimeout(resolve, 500))
+const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
 
 const responseBody = (response: AxiosResponse) => response.data;
 
 axios.interceptors.response.use(
- async response => {
-   await sleep();
+  async (response) => {
+    await sleep();
     return response;
   },
   (error: AxiosError) => {
     const { data, status } = error.response as AxiosResponse;
     switch (status) {
       case 400:
-        if(data.errors){
+        if (data.errors) {
           const modelStateErrors: string[] = [];
-          for(const key in data.errors){
-            modelStateErrors.push(data.errors[key])
+          for (const key in data.errors) {
+            modelStateErrors.push(data.errors[key]);
           }
           throw modelStateErrors.flat();
         }
@@ -31,7 +31,7 @@ axios.interceptors.response.use(
         toast.error(data.title);
         break;
       case 500:
-        router.navigate("/server-error", {state: {error: data}})
+        router.navigate("/server-error", { state: { error: data } });
         break;
       default:
         break;
@@ -61,15 +61,17 @@ const TestErrors = {
 };
 
 const Basket = {
-  get: () => requests.get('basket'),
-  addItem: (productId: number, quantity = 1) => requests.post(`basket?productId=${productId}&quantity=${quantity}`, {}),
-  removeItem: (productId: number, quantity = 1) => requests.delete(`basket?productId=${productId}&quantity=${quantity}`)
-}
+  get: () => requests.get("basket"),
+  addItem: (productId: number, quantity = 1) =>
+    requests.post(`basket?productId=${productId}&quantity=${quantity}`, {}),
+  removeItem: (productId: number, quantity = 1) =>
+    requests.delete(`basket?productId=${productId}&quantity=${quantity}`),
+};
 
 const agent = {
   Catalog,
   TestErrors,
-  Basket
+  Basket,
 };
 
 export default agent;

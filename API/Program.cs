@@ -14,24 +14,24 @@ builder.Services.AddDbContext<StoreContext>(options => {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-// builder.Services.AddCors();
-/*builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(builder =>
-    {
-        builder.AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-    });
-});*/
-builder.Services.AddCors(options =>
+/* builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
         policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:5173");
     });
-});
-
+}); */
+// For some reasons this is the CORS configuration that works on my home pc and the above does not
+builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("CorsPolicy", builder =>
+        {
+            builder.WithOrigins("http://127.0.0.1:5173")
+                   .AllowCredentials()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+    });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
