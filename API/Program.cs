@@ -22,7 +22,7 @@ builder.Services.AddDbContext<StoreContext>(options => {
     });
 }); */
 // For some reasons this is the CORS configuration that works on my home pc and the above does not
-builder.Services.AddCors(options =>
+/* builder.Services.AddCors(options =>
     {
         options.AddPolicy("CorsPolicy", builder =>
         {
@@ -32,6 +32,14 @@ builder.Services.AddCors(options =>
                    .AllowAnyMethod();
         });
     });
+*/
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:5173");
+    });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
