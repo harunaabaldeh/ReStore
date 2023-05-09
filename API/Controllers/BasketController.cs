@@ -44,12 +44,12 @@ namespace API.Controllers
 
 
         [HttpDelete]
-        public async Task<ActionResult> RemoveBasketItem(int productId, int qunatity)
+        public async Task<ActionResult> RemoveBasketItem(int productId, int quantity)
         {
             var basket = await RetrieveBasket();
             if (basket == null) return NotFound();
 
-            basket.RemoveItem(productId, qunatity);
+            basket.RemoveItem(productId, quantity);
 
             var result = await _context.SaveChangesAsync() > 0;
             if (result) return Ok();

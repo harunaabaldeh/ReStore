@@ -6,6 +6,7 @@ import {
   TableCell,
   TableContainer,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
 import axios from "axios";
@@ -15,18 +16,25 @@ import { Product } from "../../app/models/product";
 import agent from "../../app/api/agent";
 import NotFound from "../../app/errors/NotFound";
 import LoadingComponent from "../../app/layout/LoadingComponent";
+import { useStoreContext } from "../../app/context/StoreContext";
+import { LoadingButton } from "@mui/lab";
 
 function ProductDetail() {
+  const { basket } = useStoreContext();
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [quantity, setQuantity] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
+  const item = basket?.items.find(i => i.productId === product?.id);
+
 
   useEffect(() => {
-    id &&
-      agent.Catalog.details(parseInt(id))
-        .then((response) => setProduct(response))
-        .catch((error) => console.log(error))
-        .finally(() => setLoading(false));
+    if (item) setQuantity(item.qunatity);
+    id && agent.Catalog.details(parseInt(id))
+      .then((response) => setProduct(response))
+      .catch((error) => console.log(error))
+      .finally(() => setLoading(false));
   }, [id]);
 
   if (loading) return <LoadingComponent message="Loading product.." />
@@ -82,6 +90,16 @@ function ProductDetail() {
             </TableBody>
           </Table>
         </TableContainer>
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <TextField variant="outlined" type="number" label="Quantity in Cart" fullWidth value={quantity} />
+          </Grid>
+          <Grid item xs={6}>
+            <LoadingButton sx={{ height: '55px' }} color="primary" size="large" variant="contained" fullWidth>
+              {item ? 'Update Quanity ' : "Add to Cart"}
+            </LoadingButton>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
