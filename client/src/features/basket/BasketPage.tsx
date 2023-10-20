@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Grid,
   Paper,
   Table,
@@ -16,12 +17,13 @@ import { useState } from "react";
 import agent from "../../app/api/agent";
 import { LoadingButton } from "@mui/lab";
 import BasketSummary from "./BasketSummary";
+import { Link } from "react-router-dom";
 
 function BasketPage() {
   const { basket, setBasket, removeItem } = useStoreContext();
   const [status, setStatus] = useState({
     loading: false,
-    name: ""
+    name: "",
   });
 
   function handleAddItem(productId: number, name: string) {
@@ -29,7 +31,7 @@ function BasketPage() {
     agent.Basket.addItem(productId)
       .then((basket) => setBasket(basket))
       .catch((error) => console.log(error))
-      .finally(() => setStatus({ loading: false, name: '' }));
+      .finally(() => setStatus({ loading: false, name: "" }));
   }
 
   function handleRemoveItem(productId: number, qunatity = 1, name: string) {
@@ -37,7 +39,7 @@ function BasketPage() {
     agent.Basket.removeItem(productId, qunatity)
       .then(() => removeItem(productId, qunatity))
       .catch((error) => console.log(error))
-      .finally(() => setStatus({ loading: false, name: '' }));
+      .finally(() => setStatus({ loading: false, name: "" }));
   }
 
   if (!basket)
@@ -77,16 +79,28 @@ function BasketPage() {
                 </TableCell>
                 <TableCell align="center">
                   <LoadingButton
-                    loading={status.loading && status.name === 'rem' + item.productId}
-                    onClick={() => handleRemoveItem(item.productId, 1, 'rem' + item.productId)}
+                    loading={
+                      status.loading && status.name === "rem" + item.productId
+                    }
+                    onClick={() =>
+                      handleRemoveItem(
+                        item.productId,
+                        1,
+                        "rem" + item.productId
+                      )
+                    }
                     color="error"
                   >
                     <Remove />
                   </LoadingButton>
                   {item.qunatity}
                   <LoadingButton
-                    loading={status.loading && status.name === 'add' + item.productId}
-                    onClick={() => handleAddItem(item.productId, 'add' + item.productId)}
+                    loading={
+                      status.loading && status.name === "add" + item.productId
+                    }
+                    onClick={() =>
+                      handleAddItem(item.productId, "add" + item.productId)
+                    }
                     color="secondary"
                   >
                     <Add />
@@ -97,8 +111,16 @@ function BasketPage() {
                 </TableCell>
                 <TableCell align="right">
                   <LoadingButton
-                    loading={status.loading && status.name === 'del' + item.productId}
-                    onClick={() => handleRemoveItem(item.productId, item.qunatity, 'del' + item.productId)}
+                    loading={
+                      status.loading && status.name === "del" + item.productId
+                    }
+                    onClick={() =>
+                      handleRemoveItem(
+                        item.productId,
+                        item.qunatity,
+                        "del" + item.productId
+                      )
+                    }
                     color="error"
                   >
                     <Delete />
@@ -113,10 +135,18 @@ function BasketPage() {
         <Grid item xs={6} />
         <Grid item xs={6}>
           <BasketSummary />
+          <Button
+            component={Link}
+            to="/checkout"
+            variant="contained"
+            size="large"
+            fullWidth
+          >
+            Checkout
+          </Button>
         </Grid>
       </Grid>
     </>
-
   );
 }
 
