@@ -26,21 +26,21 @@ function BasketPage() {
     name: "",
   });
 
-  function handleAddItem(productId: number, name: string) {
+  const handleAddItem = (productId: number, name: string) => {
     setStatus({ loading: true, name });
     agent.Basket.addItem(productId)
       .then((basket) => setBasket(basket))
       .catch((error) => console.log(error))
       .finally(() => setStatus({ loading: false, name: "" }));
-  }
+  };
 
-  function handleRemoveItem(productId: number, qunatity = 1, name: string) {
+  const handleRemoveItem = (productId: number, qunatity = 1, name: string) => {
     setStatus({ loading: true, name });
     agent.Basket.removeItem(productId, qunatity)
       .then(() => removeItem(productId, qunatity))
       .catch((error) => console.log(error))
       .finally(() => setStatus({ loading: false, name: "" }));
-  }
+  };
 
   if (!basket)
     return <Typography variant="h3">Your basket is empty.</Typography>;
