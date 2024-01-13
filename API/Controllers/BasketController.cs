@@ -19,7 +19,7 @@ namespace API.Controllers
         {
             Basket basket = await RetrieveBasket();
 
-            if (basket == null) return NotFound();
+            if (basket is null) return NotFound();
 
             return MapBasketToDto(basket);
         }
@@ -29,10 +29,10 @@ namespace API.Controllers
         public async Task<ActionResult<BasketDto>> AddItemToBasket(int productId, int quantity)
         {
             var basket = await RetrieveBasket();
-            if (basket == null) basket = CreateBasket();
+            if (basket is null) basket = CreateBasket();
 
             var product = await _context.Products.FindAsync(productId);
-            if (product == null) return NotFound();
+            if (product is null) return NotFound();
 
             basket.AddItem(product, quantity);
 
@@ -47,7 +47,7 @@ namespace API.Controllers
         public async Task<ActionResult> RemoveBasketItem(int productId, int quantity)
         {
             var basket = await RetrieveBasket();
-            if (basket == null) return NotFound();
+            if (basket is null) return NotFound();
 
             basket.RemoveItem(productId, quantity);
 

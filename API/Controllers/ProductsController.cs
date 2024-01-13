@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    public class Products : BaseApiController
+    public class ProductsController : BaseApiController
     {
         private readonly StoreContext _context;
         
-        public Products(StoreContext context)
+        public ProductsController(StoreContext context)
         {
             _context = context;
         }
@@ -25,7 +25,7 @@ namespace API.Controllers
         {
             var product = await _context.Products.FindAsync(id);
 
-            if(product == null) return NotFound();
+            if(product is null) return NotFound();
 
             return product;
         }
