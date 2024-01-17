@@ -12,35 +12,21 @@ import {
   Typography,
 } from "@mui/material";
 import { Add, Delete, Remove } from "@mui/icons-material";
-import { useStoreContext } from "../../app/context/StoreContext";
 import { useState } from "react";
 import agent from "../../app/api/agent";
 import { LoadingButton } from "@mui/lab";
 import BasketSummary from "./BasketSummary";
 import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import {
+  addBasketItemAsync,
+  removeBasketItemAsync,
+  setBasket,
+} from "./basketSlice";
 
-function BasketPage() {
-  const { basket, setBasket, removeItem } = useStoreContext();
-  const [status, setStatus] = useState({
-    loading: false,
-    name: "",
-  });
-
-  const handleAddItem = (productId: number, name: string) => {
-    setStatus({ loading: true, name });
-    agent.Basket.addItem(productId)
-      .then((basket) => setBasket(basket))
-      .catch((error) => console.log(error))
-      .finally(() => setStatus({ loading: false, name: "" }));
-  };
-
-  const handleRemoveItem = (productId: number, qunatity = 1, name: string) => {
-    setStatus({ loading: true, name });
-    agent.Basket.removeItem(productId, qunatity)
-      .then(() => removeItem(productId, qunatity))
-      .catch((error) => console.log(error))
-      .finally(() => setStatus({ loading: false, name: "" }));
-  };
+const BasketPage = () => {
+  const { basket, status } = useAppSelector((state) => state.basket);
+  const dispatch = useAppDispatch();
 
   if (!basket)
     return <Typography variant="h3">Your basket is empty.</Typography>;
@@ -79,28 +65,18 @@ function BasketPage() {
                 </TableCell>
                 <TableCell align="center">
                   <LoadingButton
-                    loading={
-                      status.loading && status.name === "rem" + item.productId
-                    }
-                    onClick={() =>
-                      handleRemoveItem(
-                        item.productId,
-                        1,
-                        "rem" + item.productId
-                      )
-                    }
+                    loading={status === "pendingRemoveItem" + item.productId + "rem"}
+                    onClick={() => dispatch(removeBasketItemAsync({ 
+                      productId: item.productId, quantity: 1, name: "rem"
+                    }))}
                     color="error"
                   >
                     <Remove />
                   </LoadingButton>
                   {item.qunatity}
                   <LoadingButton
-                    loading={
-                      status.loading && status.name === "add" + item.productId
-                    }
-                    onClick={() =>
-                      handleAddItem(item.productId, "add" + item.productId)
-                    }
+                    loading={status === "pendingAddItem" + item.productId}
+                    onClick={() => dispatch(addBasketItemAsync({ productId: item.productId }))}
                     color="secondary"
                   >
                     <Add />
@@ -111,16 +87,10 @@ function BasketPage() {
                 </TableCell>
                 <TableCell align="right">
                   <LoadingButton
-                    loading={
-                      status.loading && status.name === "del" + item.productId
-                    }
-                    onClick={() =>
-                      handleRemoveItem(
-                        item.productId,
-                        item.qunatity,
-                        "del" + item.productId
-                      )
-                    }
+                    loading={status === "pendingRemoveItem" + item.productId + "del"}
+                    onClick={() =>dispatch(removeBasketItemAsync({ 
+                      productId: item.productId, quantity: item.qunatity, name: "del"
+                    }))}
                     color="error"
                   >
                     <Delete />
@@ -148,6 +118,6 @@ function BasketPage() {
       </Grid>
     </>
   );
-}
+};
 
 export default BasketPage;
