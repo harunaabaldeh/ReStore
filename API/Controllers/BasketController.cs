@@ -17,7 +17,7 @@ namespace API.Controllers
         [HttpGet(Name = "GetBasket")]
         public async Task<ActionResult<BasketDto>> GetBasket()
         {
-            Basket basket = await RetrieveBasket();
+            var basket = await RetrieveBasket();
 
             if (basket is null) return NotFound();
 
@@ -45,7 +45,7 @@ namespace API.Controllers
 
         [HttpDelete]
         public async Task<ActionResult> RemoveBasketItem(int productId, int quantity)
-        {
+        { 
             var basket = await RetrieveBasket();
             if (basket is null) return NotFound();
 
@@ -76,7 +76,7 @@ namespace API.Controllers
             return basket;
         }
 
-        private BasketDto MapBasketToDto(Basket basket)
+        private static BasketDto MapBasketToDto(Basket basket)
         {
             return new BasketDto
             {
