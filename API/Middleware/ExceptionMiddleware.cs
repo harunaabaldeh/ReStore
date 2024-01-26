@@ -30,7 +30,7 @@ namespace API.Middleware
                 var response = new ProblemDetails
                 {
                     Status = 5000,
-                    Detail = _evn.IsDevelopment() ? ex.StackTrace?.ToString() : null,
+                    Detail = _evn.IsDevelopment() ? ex.StackTrace : null,
                     Title = ex.Message
                 };
 
